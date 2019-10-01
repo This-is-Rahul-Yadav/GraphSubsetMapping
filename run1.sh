@@ -1,0 +1,1 @@
+./createSat.out
