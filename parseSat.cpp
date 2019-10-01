@@ -12,8 +12,8 @@ using namespace std;
 
     // return (i1-1)*numEmailUsers + (i2-1) +1;
 
-string mapping(int i1, int numEmailUsers){
-    return to_string(i1/numEmailUsers + 1) + " " + to_string(((i1-1) % numEmailUsers) + 1) + "\n";
+string mapping(int i1, int numPhoneUsers){
+    return to_string((i1-1)/numPhoneUsers + 1) + " " + to_string(((i1-1) % numPhoneUsers) + 1) + "\n";
     // return make_pair(i1/numEmailUsers + 1, ((i1-1) % numEmailUsers) + 1 );
 }
 
@@ -47,7 +47,7 @@ int main(int argc, char* argv[]){
     for(int i=0; i<numEmailUsers*numPhoneUsers; i++){
         infile>>literal;
         if(literal > 0)
-            outfile<<mapping(literal, numEmailUsers);
+            outfile<<mapping(literal, numPhoneUsers);
     }
     return 0;
 }

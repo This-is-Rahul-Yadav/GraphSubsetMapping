@@ -9,8 +9,8 @@
 
 using namespace std;
 
-int mapping(int i1, int i2, int numEmailUsers){
-    return (i1-1)*numEmailUsers + i2;
+int mapping(int i1, int i2, int numPhoneUsers){
+    return (i1-1)*numPhoneUsers + i2;
 }
 
 int main(int argc, char* argv[]){
@@ -66,13 +66,13 @@ int main(int argc, char* argv[]){
                 for(int q=1; q <= numPhoneUsers; q++){
                     if(Gemail.find(make_pair(i,j)) != Gemail.end()){
                         if(Gphone.find(make_pair(p,q)) == Gphone.end() && p!=q){
-                            out += "-" + to_string(mapping(i,p,numEmailUsers)) + " -" + to_string(mapping(j,q,numEmailUsers)) + " 0\n";
+                            out += "-" + to_string(mapping(i,p,numPhoneUsers)) + " -" + to_string(mapping(j,q,numPhoneUsers)) + " 0\n";
                             numClauses++;
                         }
                     }
                     else{
                         if(Gphone.find(make_pair(p,q)) != Gphone.end()){
-                            out += "-" + to_string(mapping(i,p,numEmailUsers)) + " -" + to_string(mapping(j,q,numEmailUsers)) + " 0\n";
+                            out += "-" + to_string(mapping(i,p,numPhoneUsers)) + " -" + to_string(mapping(j,q,numPhoneUsers)) + " 0\n";
                             numClauses++;
                         }
                     }
@@ -82,7 +82,7 @@ int main(int argc, char* argv[]){
     }
     for(int i=1; i <= numEmailUsers; i++){
         for(int j=1; j <= numPhoneUsers; j++){
-            out += to_string(mapping(i,j,numEmailUsers)) + " ";
+            out += to_string(mapping(i,j,numPhoneUsers)) + " ";
         }
         out += "0\n";
         numClauses++;
@@ -91,7 +91,7 @@ int main(int argc, char* argv[]){
         for(int p=1; p <= numPhoneUsers; p++){
             for (int q=1; q <= numPhoneUsers; q++){
                 if(p!=q){
-                    out += "-" + to_string(mapping(i,p,numEmailUsers)) + " -" + to_string(mapping(i,q,numEmailUsers)) + " 0\n";
+                    out += "-" + to_string(mapping(i,p,numPhoneUsers)) + " -" + to_string(mapping(i,q,numPhoneUsers)) + " 0\n";
                     numClauses++;
                 }
             }
@@ -101,7 +101,7 @@ int main(int argc, char* argv[]){
         for(int j=1; j <= numEmailUsers; j++){
             for (int p=1; p <= numPhoneUsers; p++){
                 if(i!=j){
-                    out += "-" + to_string(mapping(i,p,numEmailUsers)) + " -" + to_string(mapping(j,p,numEmailUsers)) + " 0\n";
+                    out += "-" + to_string(mapping(i,p,numPhoneUsers)) + " -" + to_string(mapping(j,p,numPhoneUsers)) + " 0\n";
                     numClauses++;
                 }
             }
