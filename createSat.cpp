@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include <set>
+#include <ctime>
 #include <utility>
 #include <iterator>
 #include <string>
@@ -118,5 +119,6 @@ int main(int argc, char* argv[]){
 
     outfile.close();
 
+    cout<<"hi"<<endl;
     return 0;
 }
