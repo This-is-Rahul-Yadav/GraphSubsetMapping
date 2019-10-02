@@ -15,6 +15,6 @@ else
 	fi
 fi
 ./run1.sh
-./minisat-2.2.0/minisat/core/minisat test.satinput test.satoutput
+./minisat/core/minisat test.satinput test.satoutput
 ./run2.sh
 less test.mapping
