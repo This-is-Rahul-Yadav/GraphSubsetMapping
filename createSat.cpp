@@ -21,6 +21,9 @@ int main(int argc, char* argv[]){
     set<int, greater<int> >phoneUsers;
     set<int, greater<int> >emailUsers;
 
+    int maxPhoneUsers = -1;
+    int maxEmailUsers = -1;
+
 
     int edgeFrom, edgeTo;
 
@@ -38,17 +41,23 @@ int main(int argc, char* argv[]){
         phoneUsers.insert(edgeFrom);
         phoneUsers.insert(edgeTo);
 
+        maxPhoneUsers = max(maxPhoneUsers, max(edgeFrom, edgeTo));
+
     }
     while(!infile.eof()){
         infile>>edgeFrom>>edgeTo;
         Gemail.insert(make_pair(make_pair(edgeFrom,edgeTo), true));
         emailUsers.insert(edgeFrom);
         emailUsers.insert(edgeTo);
+
+        maxEmailUsers = max(maxEmailUsers, max(edgeFrom, edgeTo));
     }
     infile.close();
 
-    int numPhoneUsers = phoneUsers.size();
-    int numEmailUsers = emailUsers.size();
+    int numPhoneUsers = maxPhoneUsers;
+    int numEmailUsers = maxEmailUsers;
+    // int numPhoneUsers = phoneUsers.size();
+    // int numEmailUsers = emailUsers.size();
 
     ofstream tempOutfile;
     tempOutfile.open("setSizes.txt");
