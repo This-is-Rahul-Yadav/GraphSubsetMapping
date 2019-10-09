@@ -1,4 +1,4 @@
-./compile.sh
+# ./compile.sh
 if [ $# -eq 1 ]; then
 	if [ $1 == '-m' ]; then
 		./getGraph.out

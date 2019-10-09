@@ -15,6 +15,8 @@ int mapping(int i1, int i2, int numPhoneUsers){
 }
 
 int main(int argc, char* argv[]){
+    ios_base::sync_with_stdio(false); cin.tie(NULL);
+
     clock_t start, mainStart, end;
     double msecs;
 
@@ -121,15 +123,19 @@ int main(int argc, char* argv[]){
 
     string out = "";
 
-    int numCalculatedMainClauses = (numEmailEdges*( numPhoneUsers*(numPhoneUsers -1) - numPhoneEdges) ) + ( numPhoneEdges*(numEmailUsers*(numEmailUsers -1) - numEmailEdges));
-    int numFinalClauses = numCalculatedMainClauses + numEmailUsers + numEmailUsers*(numPhoneUsers - 1)*numPhoneUsers + numPhoneUsers*numEmailUsers*(numEmailUsers - 1);
+    long long int numCalculatedMainClauses = (numEmailEdges*( numPhoneUsers*(numPhoneUsers -1) - numPhoneEdges) ) + ( numPhoneEdges*(numEmailUsers*(numEmailUsers -1) - numEmailEdges));
+    long long int numFinalClauses = numCalculatedMainClauses + numEmailUsers + numEmailUsers*(numPhoneUsers - 1)*numPhoneUsers + numPhoneUsers*numEmailUsers*(numEmailUsers - 1);
 
     cout<<"CALC_MAIN_CLAUSES: "<<numCalculatedMainClauses<<endl;
     cout<<"NUM_CLAUSES: "<<numFinalClauses<<endl;
     
-    ofstream outfile;
-    outfile.open("test.satinput");
-    outfile<<"p cnf "<<numEmailUsers*numPhoneUsers<<" "<<numFinalClauses<<"\n";
+    FILE *fp;
+    fp = fopen("test.satinput", "w");
+    fprintf( fp, "p cnf %d %lld\n", numEmailUsers*numPhoneUsers, numFinalClauses);
+
+    // ofstream outfile;
+    // outfile.open("test.satinput");
+    // outfile<<"p cnf "<<numEmailUsers*numPhoneUsers<<" "<<numFinalClauses<<"\n";
 
 
     // for(int i=1; i <= numEmailUsers; i++){
@@ -164,7 +170,8 @@ int main(int argc, char* argv[]){
                 if (p==q)
                     continue;
                 if(!GphoneArr[p][q]){
-                    outfile<< -1 * mapping(a,p,numPhoneUsers)<<" "<< -1 * mapping(b,q,numPhoneUsers)<<" "<<0<<"\n";
+                    fprintf( fp, "%d %d %d\n", -1 * mapping(a,p,numPhoneUsers), -1 * mapping(b,q,numPhoneUsers), 0);
+                    // outfile<< -1 * mapping(a,p,numPhoneUsers)<<" "<< -1 * mapping(b,q,numPhoneUsers)<<" "<<0<<"\n";
                     // out += "-"+to_string(mapping(i,p,numPhoneUsers))+" -"+to_string(mapping(j,q,numPhoneUsers))+" 0\n";
                 }
             }
@@ -178,7 +185,8 @@ int main(int argc, char* argv[]){
                 if (p==q)
                     continue;
                 if(!GemailArr[p][q]){
-                    outfile<< -1 * mapping(p,a,numPhoneUsers)<<" "<< -1 * mapping(q,b,numPhoneUsers)<<" "<<0<<"\n";
+                    fprintf( fp, "%d %d %d\n", -1 * mapping(p,a,numPhoneUsers), -1 * mapping(q,b,numPhoneUsers), 0);
+                    // outfile<< -1 * mapping(p,a,numPhoneUsers)<<" "<< -1 * mapping(q,b,numPhoneUsers)<<" "<<0<<"\n";
                     // out += "-"+to_string(mapping(i,p,numPhoneUsers))+" -"+to_string(mapping(j,q,numPhoneUsers))+" 0\n";
                 }
             }
@@ -190,11 +198,13 @@ int main(int argc, char* argv[]){
     for(int i=1; i <= numEmailUsers; i++){
         for(int j=1; j <= numPhoneUsers; j++){
             // out += to_string(mapping(i,j,numPhoneUsers)) + " ";
-            outfile<<mapping(i,j,numPhoneUsers)<<" ";
+            fprintf( fp, "%d ", mapping(i,j,numPhoneUsers));
+            // outfile<<mapping(i,j,numPhoneUsers)<<" ";
 
         }
         // out += "0\n";
-        outfile<<"0\n";
+        // outfile<<"0\n";
+        fprintf( fp, "0\n");
     }
 
     end = clock(); msecs = ( (double) (end - start)) * 1000.0 / CLOCKS_PER_SEC; start = clock(); cout<<"🕑 All ORs loop: "<<msecs<<endl;
@@ -204,7 +214,8 @@ int main(int argc, char* argv[]){
             for (int q=1; q <= numPhoneUsers; q++){
                 if(p!=q){
                     // out += "-" + to_string(mapping(i,p,numPhoneUsers)) + " -" + to_string(mapping(i,q,numPhoneUsers)) + " 0\n";
-                    outfile<< -1 * mapping(i,p,numPhoneUsers)<<" "<< -1 * mapping(i,q,numPhoneUsers)<<" 0\n";
+                    fprintf( fp, "%d %d %d\n", -1 * mapping(i,p,numPhoneUsers), -1 * mapping(i,q,numPhoneUsers), 0);
+                    // outfile<< -1 * mapping(i,p,numPhoneUsers)<<" "<< -1 * mapping(i,q,numPhoneUsers)<<" 0\n";
                 }
             }
         }
@@ -217,15 +228,16 @@ int main(int argc, char* argv[]){
             for (int p=1; p <= numPhoneUsers; p++){
                 if(i!=j){
                     // out += "-" + to_string(mapping(i,p,numPhoneUsers)) + " -" + to_string(mapping(j,p,numPhoneUsers)) + " 0\n";
-                    outfile<< -1 * mapping(i,p,numPhoneUsers)<<" "<< -1 * mapping(j,p,numPhoneUsers)<<" 0\n";
+                    fprintf( fp, "%d %d %d\n", -1 * mapping(i,p,numPhoneUsers), -1 * mapping(j,p,numPhoneUsers), 0);
+                    // outfile<< -1 * mapping(i,p,numPhoneUsers)<<" "<< -1 * mapping(j,p,numPhoneUsers)<<" 0\n";
                 }
             }
         }
     }
     
     // outfile<<out;
-
-    outfile.close();
+    fclose(fp);
+    // outfile.close();
     end = clock();
     msecs = ( (double) (end - mainStart)) * 1000.0 / CLOCKS_PER_SEC;
     start = clock();
