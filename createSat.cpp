@@ -65,6 +65,9 @@ int main(int argc, char* argv[]){
 
 
 
+    pair<int,int> emailEdges[numEmailEdges];
+    pair<int,int> phoneEdges[numPhoneEdges];
+    int emailEdgeIndex=0, phoneEdgeIndex=0;
 
     int numPhoneUsers = maxPhoneUsers;
     int numEmailUsers = maxEmailUsers;
@@ -94,10 +97,13 @@ int main(int argc, char* argv[]){
         if (edgeFrom==0 && edgeTo==0)
             break;
         GphoneArr[edgeFrom][edgeTo] = true;
+        phoneEdges[phoneEdgeIndex++] = make_pair(edgeFrom, edgeTo);
     }
     while(!infile.eof()){
         infile>>edgeFrom>>edgeTo;
         GemailArr[edgeFrom][edgeTo] = true;
+        emailEdges[emailEdgeIndex++] = make_pair(edgeFrom, edgeTo);
+
     }
     infile.close();
 
@@ -126,26 +132,54 @@ int main(int argc, char* argv[]){
     outfile<<"p cnf "<<numEmailUsers*numPhoneUsers<<" "<<numFinalClauses<<"\n";
 
 
-    for(int i=1; i <= numEmailUsers; i++){
-        for(int j=1; j <= numEmailUsers; j++){
-            if(i==j)
-                continue;
-            for(int p=1; p <= numPhoneUsers; p++){
-                for(int q=1; q <= numPhoneUsers; q++){
-                    if (p==q)
-                        continue;
-                    if(GemailArr[i][j]){
-                        if(!GphoneArr[p][q]){
-                            outfile<< -1 * mapping(i,p,numPhoneUsers)<<" "<< -1 * mapping(j,q,numPhoneUsers)<<" "<<0<<"\n";
-                            // out += "-"+to_string(mapping(i,p,numPhoneUsers))+" -"+to_string(mapping(j,q,numPhoneUsers))+" 0\n";
-                        }
-                    }
-                    else{
-                        if(GphoneArr[p][q]){
-                            outfile<< -1 * mapping(i,p,numPhoneUsers)<<" "<< -1 * mapping(j,q,numPhoneUsers)<<" "<<0<<"\n";
-                            // out += "-"+to_string(mapping(i,p,numPhoneUsers))+" -"+to_string(mapping(j,q,numPhoneUsers))+" 0\n";
-                        }
-                    }
+    // for(int i=1; i <= numEmailUsers; i++){
+    //     for(int j=1; j <= numEmailUsers; j++){
+    //         if(i==j)
+    //             continue;
+    //         for(int p=1; p <= numPhoneUsers; p++){
+    //             for(int q=1; q <= numPhoneUsers; q++){
+    //                 if (p==q)
+    //                     continue;
+    //                 if(GemailArr[i][j]){
+    //                     if(!GphoneArr[p][q]){
+    //                         outfile<< -1 * mapping(i,p,numPhoneUsers)<<" "<< -1 * mapping(j,q,numPhoneUsers)<<" "<<0<<"\n";
+    //                         // out += "-"+to_string(mapping(i,p,numPhoneUsers))+" -"+to_string(mapping(j,q,numPhoneUsers))+" 0\n";
+    //                     }
+    //                 }
+    //                 else{
+    //                     if(GphoneArr[p][q]){
+    //                         outfile<< -1 * mapping(i,p,numPhoneUsers)<<" "<< -1 * mapping(j,q,numPhoneUsers)<<" "<<0<<"\n";
+    //                         // out += "-"+to_string(mapping(i,p,numPhoneUsers))+" -"+to_string(mapping(j,q,numPhoneUsers))+" 0\n";
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+    int a,b;
+    for (int i=0; i<numEmailEdges; i++){
+        a=emailEdges[i].first; b=emailEdges[i].second;
+        for(int p=1; p <= numPhoneUsers; p++){
+            for(int q=1; q <= numPhoneUsers; q++){
+                if (p==q)
+                    continue;
+                if(!GphoneArr[p][q]){
+                    outfile<< -1 * mapping(a,p,numPhoneUsers)<<" "<< -1 * mapping(b,q,numPhoneUsers)<<" "<<0<<"\n";
+                    // out += "-"+to_string(mapping(i,p,numPhoneUsers))+" -"+to_string(mapping(j,q,numPhoneUsers))+" 0\n";
+                }
+            }
+        }
+
+    }
+    for (int i=0; i<numPhoneEdges; i++){
+        a=phoneEdges[i].first; b=phoneEdges[i].second;
+        for(int p=1; p <= numEmailUsers; p++){
+            for(int q=1; q <= numEmailUsers; q++){
+                if (p==q)
+                    continue;
+                if(!GemailArr[p][q]){
+                    outfile<< -1 * mapping(p,a,numPhoneUsers)<<" "<< -1 * mapping(q,b,numPhoneUsers)<<" "<<0<<"\n";
+                    // out += "-"+to_string(mapping(i,p,numPhoneUsers))+" -"+to_string(mapping(j,q,numPhoneUsers))+" 0\n";
                 }
             }
         }
